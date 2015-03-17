@@ -1,0 +1,188 @@
+#pragma config(StandardModel, "RVW REMBOT")//Virtual Worlds header
+#pragma config(RenamedStdModelSensor, S1, touchSensor)
+#pragma config(RenamedStdModelSensor, S3, lightSensor)
+#pragma config(RenamedStdModelSensor, S4, sonarSensor)
+
+
+//prototypes
+void left_turn(void);
+void right_turn(void);
+void straight(void);
+void radar(int *l_dir,int *r_dir,int*s_dir);
+void follow_object(int l_dir,int r_dir,int s_dir);
+
+/*Below variables will be declared localy in the final version.
+	The reason to have them global is that I couldnt see them
+	changing in the debbuger window when they are local. */
+	int num = 1;//infinite loop cond
+	int left_dir = 0;//take values from the left direction
+	int right_dir = 0;//-||-||-							right
+	int straight_dir = 0;//-||-||-					straight
+
+
+task main()
+{
+
+
+			motor[rightMotor] = 20;
+      motor[leftMotor]  = 20;
+			wait1Msec(1000);
+
+	while(num == 1)
+	{
+		/*This is for balck spots - still in test
+			if(SensorValue(lightSensor) <  30)
+			{
+					motor[rightMotor] = -20;
+      		motor[leftMotor]  = -20;
+					wait1Msec(2000);
+					left_turn();
+					motor[rightMotor] = 20;
+      		motor[leftMotor]  = 20;
+					wait1Msec(3500);
+					right_turn();
+					motor[rightMotor] = 20;
+					motor[leftMotor]  = 20;
+					wait1Msec(2000);
+		  }
+		  */
+
+			wait1Msec(1000);
+			//call radar()
+			radar(&left_dir,&right_dir,&straight_dir);
+			//call follow_object()
+			follow_object(left_dir,right_dir,straight_dir);
+	}
+
+}//end main()
+
+//Implement radar function()----------------------------------------------------------------------------------------------------------------
+void radar(int *l_dir,int*r_dir,int *s_dir)
+{
+		wait1Msec(2000);
+	nMotorEncoder[rightMotor] = 0;
+//left turn 90 deg
+  while(nMotorEncoder(rightMotor) < 190)
+	{
+			//Turn Left
+			motor[rightMotor] = 20;
+			motor[leftMotor]  = -20;
+
+	}//end while
+
+			motor[rightMotor] = 0;
+      motor[leftMotor]  = 0;
+      *(l_dir) = SensorValue(sonarSensor);//take the values form the left
+			wait1Msec(2000);
+
+
+			//right turn 180 deg
+			nMotorEncoder[leftMotor] = 0;
+		 while(nMotorEncoder(leftMotor) < 370)
+			{
+
+					motor[rightMotor] = -20;
+					motor[leftMotor]  = 20;
+
+			}//end while
+			motor[rightMotor] = 0;
+      motor[leftMotor]  = 0;
+			*(r_dir) = SensorValue(sonarSensor); //take the values form the right
+			wait1Msec(2000);
+
+			//turn left back again by 90 deg
+	nMotorEncoder[rightMotor] = 0;
+  while(nMotorEncoder(rightMotor) < 190)
+{
+
+		motor[rightMotor] = 20;
+		motor[leftMotor]  = -20;
+
+}//end while
+			motor[rightMotor] = 0;
+      motor[leftMotor]  = 0;
+			*(s_dir) = SensorValue(sonarSensor);
+			if(SensorValue(sonarSensor) == -1)//this part of code is for virtual worlds only - if nothing detected returns "-1"
+			{
+				*(s_dir) = 250;//change -1 to 250 to not to confused if statment in follow object() function
+		   }
+			wait1Msec(1000);
+}
+//Implement follow_object()-----------------------------------------------------------------------------------------------------------------
+void follow_object(int l_dir,int r_dir,int s_dir)
+{
+	if(l_dir < r_dir && l_dir < s_dir)//if the values on the left are the smallest go into that direction
+			{
+					left_turn();
+					motor[rightMotor] = 20;
+      		motor[leftMotor]  = 20;
+					wait1Msec(3500);
+					right_turn();
+					motor[rightMotor] = 0;
+					motor[leftMotor]  = 0;
+					wait1Msec(2000);
+
+			}
+			else
+				if(r_dir < l_dir && r_dir < s_dir)//if the values on the right are the smallest go into that direction
+				{
+					right_turn();
+					motor[rightMotor] = 20;
+      		motor[leftMotor]  = 20;
+					wait1Msec(3500);
+					left_turn();
+					motor[rightMotor] = 0;
+					motor[leftMotor]  = 0;
+					wait1Msec(2000);
+
+			}
+				else//else go straight
+				{
+					motor[rightMotor] = 20;
+		      motor[leftMotor]  = 20;
+					wait1Msec(1000);
+		  }
+}
+
+//Implement left_turn()---------------------------------------------------------------------------------------------------------------------
+void left_turn()
+{
+
+	nMotorEncoder[rightMotor] = 0;
+
+  while(nMotorEncoder(rightMotor) < 190)
+{
+		//Turn Left
+		motor[rightMotor] = 25;
+		motor[leftMotor]  = -25;
+
+}//end while
+		nMotorEncoder[rightMotor] = 0;
+}//end left()
+
+//Implement right_turn()--------------------------------------------------------------------------------------------------------------------
+//Implement right()
+void right_turn()
+{
+	nMotorEncoder[leftMotor] = 0;
+
+  while(nMotorEncoder(leftMotor) < 190)
+{
+		//Turn Left
+		motor[rightMotor] = -25;
+		motor[leftMotor]  = 25;
+
+}//end while
+		nMotorEncoder[rightMotor] = 0;
+
+}//end right()
+
+void straight()//not in used for the moment
+{
+
+		//Turn Left
+		motor[rightMotor] = 55;
+		motor[leftMotor]  = 55;
+		wait1Msec(3500);
+
+}//end
