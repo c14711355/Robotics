@@ -12,7 +12,7 @@ void radar(int *l_dir,int *r_dir,int*s_dir);
 void follow_object(int l_dir,int r_dir,int s_dir);
 
 /*Below variables will be declared localy in the final version.
-	The reason to have them global is that I couldnt see them
+	The reason to have them global is that cant see them
 	changing in the debbuger window when they are local. */
 	int num = 1;//infinite loop cond
 	int left_dir = 0;//take values from the left direction
