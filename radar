@@ -16,8 +16,8 @@ void follow_object(int l_dir,int r_dir,int s_dir);
 	changing in the debbuger window when they are local. */
 	int num = 1;//infinite loop cond
 	int left_dir = 0;//take values from the left direction
-	int right_dir = 0;//-||-||-							right
-	int straight_dir = 0;//-||-||-					straight
+	int right_dir = 0;//-||-||-		right
+	int straight_dir = 0;//-||-||-		straight
 
 
 task main()
@@ -25,7 +25,7 @@ task main()
 
 
 			motor[rightMotor] = 20;
-      motor[leftMotor]  = 20;
+      			motor[leftMotor]  = 20;
 			wait1Msec(1000);
 
 	while(num == 1)
@@ -34,17 +34,17 @@ task main()
 			if(SensorValue(lightSensor) <  30)
 			{
 					motor[rightMotor] = -20;
-      		motor[leftMotor]  = -20;
+      					motor[leftMotor]  = -20;
 					wait1Msec(2000);
 					left_turn();
 					motor[rightMotor] = 20;
-      		motor[leftMotor]  = 20;
+      					motor[leftMotor]  = 20;
 					wait1Msec(3500);
 					right_turn();
 					motor[rightMotor] = 20;
 					motor[leftMotor]  = 20;
 					wait1Msec(2000);
-		  }
+		  }//end if
 		  */
 
 			wait1Msec(1000);
@@ -52,7 +52,7 @@ task main()
 			radar(&left_dir,&right_dir,&straight_dir);
 			//call follow_object()
 			follow_object(left_dir,right_dir,straight_dir);
-	}
+	}//end while
 
 }//end main()
 
@@ -71,14 +71,14 @@ void radar(int *l_dir,int*r_dir,int *s_dir)
 	}//end while
 
 			motor[rightMotor] = 0;
-      motor[leftMotor]  = 0;
-      *(l_dir) = SensorValue(sonarSensor);//take the values form the left
+      			motor[leftMotor]  = 0;
+      			*(l_dir) = SensorValue(sonarSensor);//take the values form the left
 			wait1Msec(2000);
 
 
 			//right turn 180 deg
 			nMotorEncoder[leftMotor] = 0;
-		 while(nMotorEncoder(leftMotor) < 370)
+		 	while(nMotorEncoder(leftMotor) < 370)
 			{
 
 					motor[rightMotor] = -20;
@@ -86,26 +86,27 @@ void radar(int *l_dir,int*r_dir,int *s_dir)
 
 			}//end while
 			motor[rightMotor] = 0;
-      motor[leftMotor]  = 0;
+      			motor[leftMotor]  = 0;
 			*(r_dir) = SensorValue(sonarSensor); //take the values form the right
 			wait1Msec(2000);
 
 			//turn left back again by 90 deg
-	nMotorEncoder[rightMotor] = 0;
-  while(nMotorEncoder(rightMotor) < 190)
-{
+			nMotorEncoder[rightMotor] = 0;
+  			while(nMotorEncoder(rightMotor) < 190)
+			{
 
-		motor[rightMotor] = 20;
-		motor[leftMotor]  = -20;
+				motor[rightMotor] = 20;
+				motor[leftMotor]  = -20;
 
-}//end while
+			}//end while
 			motor[rightMotor] = 0;
-      motor[leftMotor]  = 0;
+			 motor[leftMotor]  = 0;
 			*(s_dir) = SensorValue(sonarSensor);//take values whats ahead
-			if(SensorValue(sonarSensor) == -1)//this part of code is for virtual worlds only - if nothing detected returns "-1"
+			//this part of code is for virtual worlds only - if nothing detected returns "-1"
+			if(SensorValue(sonarSensor) == -1)
 			{
 				*(s_dir) = 250;//change -1 to 250 to not to confused if statment in follow object() function
-		   }
+		   	}//end if
 			wait1Msec(1000);
 }
 //Implement follow_object()-----------------------------------------------------------------------------------------------------------------
@@ -115,7 +116,7 @@ void follow_object(int l_dir,int r_dir,int s_dir)
 			{
 					left_turn();
 					motor[rightMotor] = 20;
-      		motor[leftMotor]  = 20;
+      					motor[leftMotor]  = 20;
 					wait1Msec(3500);
 					right_turn();
 					motor[rightMotor] = 0;
@@ -128,7 +129,7 @@ void follow_object(int l_dir,int r_dir,int s_dir)
 				{
 					right_turn();
 					motor[rightMotor] = 20;
-      		motor[leftMotor]  = 20;
+      					motor[leftMotor]  = 20;
 					wait1Msec(3500);
 					left_turn();
 					motor[rightMotor] = 0;
@@ -139,7 +140,7 @@ void follow_object(int l_dir,int r_dir,int s_dir)
 				else//else go straight
 				{
 					motor[rightMotor] = 20;
-		      motor[leftMotor]  = 20;
+		      			motor[leftMotor]  = 20;
 					wait1Msec(1000);
 		  }
 }
