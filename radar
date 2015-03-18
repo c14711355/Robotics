@@ -73,6 +73,11 @@ void radar(int *l_dir,int*r_dir,int *s_dir)
 			motor[rightMotor] = 0;
       			motor[leftMotor]  = 0;
       			*(l_dir) = SensorValue(sonarSensor);//take the values form the left
+      			//Ignore objects with 130 and over values, -1 value is only for VW
+			 if(SensorValue(sonarSensor) == -1 || SensorValue(sonarSensor) > 130)//this part of code is for virtual worlds only - if nothing detected returns "-1"
+			{
+				*(l_dir) = 260;//change to 260 (260 is out of bound value and is not taken into account)
+		   	}
 			wait1Msec(2000);
 
 
@@ -88,6 +93,11 @@ void radar(int *l_dir,int*r_dir,int *s_dir)
 			motor[rightMotor] = 0;
       			motor[leftMotor]  = 0;
 			*(r_dir) = SensorValue(sonarSensor); //take the values form the right
+			//Ignore objects with 130 and over values, -1 value is only for VW
+			 if(SensorValue(sonarSensor) == -1 || SensorValue(sonarSensor) > 130)//this part of code is for virtual worlds only - if nothing detected returns "-1"
+			{
+				*(r_dir) = 260;//change to 260 (260 is out of bound value and is not taken into account)
+		   	}
 			wait1Msec(2000);
 
 			//turn left back again by 90 deg
