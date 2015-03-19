@@ -1,0 +1,38 @@
+// PID Acurate Moving
+//Always use BC ! A
+
+
+task main()
+{
+
+
+	nMotorEncoder[motorB] = 0;
+	nMotorEncoder[motorC] = 0;
+
+	motor[motorB] = 40;
+	motor[motorC] = 40;
+	wait1Msec(3000);
+
+	motor[motorB] = 0;
+	motor[motorC] = 0;
+
+	int motorBturns = nMotorEncoder[motorB];
+	int motorCturns = nMotorEncoder[motorC];
+
+	nxtDisplayCenteredTextLine (0 , "%d" , motorBturns);
+	nxtDisplayCenteredTextLine (1 , "%d" , motorCturns);
+	wait1Msec(30000);
+
+	/*
+	nMotorPIDSpeedCtrl[motorB] = mtrSpeedReg;
+	nMotorPIDSpeedCtrl[motorC] = mtrSpeedReg;
+
+	nSyncedMotors = synchBC;*/
+
+	//Check number rotations after set time to test
+
+
+
+
+
+}
